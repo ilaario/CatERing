@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="catering.businesslogic.kitchen.SummarySheetTest" time="0.389" tests="2" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="25"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/ilaario/Desktop/UniTO/SAS/catering/target/test-classes:/Users/ilaario/Desktop/UniTO/SAS/catering/target/classes:/Users/ilaario/.m2/repository/org/xerial/sqlite-jdbc/3.49.1.0/sqlite-jdbc-3.49.1.0.jar:/Users/ilaario/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.12.2/junit-jupiter-api-5.12.2.jar:/Users/ilaario/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/ilaario/.m2/repository/org/junit/platform/junit-platform-commons/1.12.2/junit-platform-commons-1.12.2.jar:/Users/ilaario/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/ilaario/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.12.2/junit-jupiter-engine-5.12.2.jar:/Users/ilaario/.m2/repository/org/junit/platform/junit-platform-engine/1.12.2/junit-platform-engine-1.12.2.jar:"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="user.timezone" value="Europe/Rome"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="25"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="/Users/ilaario/Library/Java/JavaVirtualMachines/openjdk-ea-25/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/ilaario/Desktop/UniTO/SAS/catering/target/surefire/surefirebooter-20250704153012928_3.jar /Users/ilaario/Desktop/UniTO/SAS/catering/target/surefire 2025-07-04T15-30-12_649-jvmRun1 surefire-20250704153012928_1tmp surefire_0-20250704153012928_2tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/ilaario/Desktop/UniTO/SAS/catering/target/test-classes:/Users/ilaario/Desktop/UniTO/SAS/catering/target/classes:/Users/ilaario/.m2/repository/org/xerial/sqlite-jdbc/3.49.1.0/sqlite-jdbc-3.49.1.0.jar:/Users/ilaario/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.12.2/junit-jupiter-api-5.12.2.jar:/Users/ilaario/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/ilaario/.m2/repository/org/junit/platform/junit-platform-commons/1.12.2/junit-platform-commons-1.12.2.jar:/Users/ilaario/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/ilaario/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.12.2/junit-jupiter-engine-5.12.2.jar:/Users/ilaario/.m2/repository/org/junit/platform/junit-platform-engine/1.12.2/junit-platform-engine-1.12.2.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/ilaario"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2025-09-16"/>
+    <property name="java.home" value="/Users/ilaario/Library/Java/JavaVirtualMachines/openjdk-ea-25/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/ilaario/Desktop/UniTO/SAS/catering"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/ilaario/Desktop/UniTO/SAS/catering/target/surefire/surefirebooter-20250704153012928_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.runtime.version" value="25-ea+23-2842"/>
+    <property name="user.name" value="ilaario"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="15.5"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="localRepository" value="/Users/ilaario/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="/var/folders/hk/qk0x84cd5t5drsk1_zb66vgh0000gn/T/"/>
+    <property name="java.version" value="25-ea"/>
+    <property name="user.dir" value="/Users/ilaario/Desktop/UniTO/SAS/catering"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/ilaario/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="25-ea+23-2842"/>
+    <property name="stdin.encoding" value="UTF-8"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.class.version" value="69.0"/>
+  </properties>
+  <testcase name="testSummarySheetCreation" classname="catering.businesslogic.kitchen.SummarySheetTest" time="0.039">
+    <system-err><![CDATA[2025-07-04 15:30:13.942 [INFO] catering.persistence.PersistenceManager: Database initialized successfully from database/catering_init_sqlite.sql
+2025-07-04 15:30:13.944 [INFO] catering.businesslogic.shift.Shift: Loading all shifts from database
+2025-07-04 15:30:13.947 [INFO] catering.businesslogic.shift.Shift: Loaded 0 shifts
+2025-07-04 15:30:13.975 [INFO] catering.businesslogic.user.UserManager: Attempting login for user: Antonio
+2025-07-04 15:30:13.976 [INFO] catering.businesslogic.user.UserManager: User successfully logged in: Antonio
+2025-07-04 15:30:13.977 [INFO] catering.businesslogic.kitchen.SummarySheetTest: Testing summary sheet creation
+2025-07-04 15:30:13.986 [INFO] catering.businesslogic.kitchen.SummarySheetTest: Created summary sheet: 
+
+SummarySheet [ID: 0, Owner: Antonio, Service: Pranzo Buffet Aziendale, Tasks: 9, Assignments: 0]
+
+Tasks:
+  1. [ ] Caprese
+  2. [ ] Prosciutto e Melone
+  3. [ ] Spaghetti alla Carbonara
+  4. [ ] Salsa carbonara
+  5. [ ] Ossobuco alla Milanese
+  6. [ ] Brodo di carne
+  7. [ ] Gremolata
+  8. [ ] Panna Cotta
+  9. [ ] Gelato Artigianale
+]]></system-err>
+  </testcase>
+  <testcase name="testTaskAssignment" classname="catering.businesslogic.kitchen.SummarySheetTest" time="0.049">
+    <system-err><![CDATA[2025-07-04 15:30:14.006 [INFO] catering.businesslogic.user.UserManager: Attempting login for user: Antonio
+2025-07-04 15:30:14.006 [INFO] catering.businesslogic.user.UserManager: User successfully logged in: Antonio
+2025-07-04 15:30:14.007 [INFO] catering.businesslogic.kitchen.SummarySheetTest: Testing task assignment to cook
+2025-07-04 15:30:14.037 [INFO] catering.businesslogic.shift.Shift: Added booking for user Luca to shift ID 0
+2025-07-04 15:30:14.040 [INFO] catering.businesslogic.kitchen.SummarySheetTest: Successfully assigned task. Assignment details: Task: Caprese, Cook: Luca, Shift: 2025-04-07 09:00:00-14:00:00
+2025-07-04 15:30:14.040 [INFO] catering.businesslogic.kitchen.SummarySheetTest: 
+
+SummarySheet [ID: 0, Owner: Antonio, Service: Pranzo Buffet Aziendale, Tasks: 9, Assignments: 1]
+
+Tasks:
+  1. [ ] Caprese
+  2. [ ] Prosciutto e Melone
+  3. [ ] Spaghetti alla Carbonara
+  4. [ ] Salsa carbonara
+  5. [ ] Ossobuco alla Milanese
+  6. [ ] Brodo di carne
+  7. [ ] Gremolata
+  8. [ ] Panna Cotta
+  9. [ ] Gelato Artigianale
+
+Assignments:
+  1. Task: Caprese, Cook: Luca, Shift: 2025-04-07 (09:00:00-14:00:00)
+]]></system-err>
+  </testcase>
+</testsuite>
