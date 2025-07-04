@@ -12,7 +12,7 @@ import java.util.Set;
 public class User {
 
     public static enum Role {
-        CUOCO, CHEF, ORGANIZZATORE, SERVIZIO
+        CUOCO, CHEF, ORGANIZZATORE, PERSONALE
     };
 
     private int id;
@@ -124,7 +124,7 @@ public class User {
     }
 
     public boolean isService() {
-        return roles.contains(Role.SERVIZIO);
+        return roles.contains(Role.PERSONALE);
     }
 
 
@@ -237,7 +237,7 @@ public class User {
                         u.roles.add(User.Role.ORGANIZZATORE);
                         break;
                     case 3:
-                        u.roles.add(User.Role.SERVIZIO);
+                        u.roles.add(User.Role.PERSONALE);
                         break;
                 }
             }
@@ -379,8 +379,8 @@ public class User {
                 return "h";
             case ORGANIZZATORE:
                 return "o";
-            case SERVIZIO:
-                return "s";
+            case PERSONALE:
+                return "p";
             default:
                 return "";
         }
