@@ -1,189 +1,190 @@
 -- database: catering.db
 -- 1) FIRST REMOVE ALL TABLES (in reverse dependency order)
-DROP TABLE IF EXISTS `Assignment`;
+DROP TABLE IF EXISTS 'Assignment';
 
-DROP TABLE IF EXISTS `Tasks`;
+DROP TABLE IF EXISTS 'Tasks';
 
-DROP TABLE IF EXISTS `SummarySheets`;
+DROP TABLE IF EXISTS 'SummarySheets';
 
-DROP TABLE IF EXISTS `ShiftBookings`;
+DROP TABLE IF EXISTS 'ShiftBookings';
 
-DROP TABLE IF EXISTS `Shifts`;
+DROP TABLE IF EXISTS 'Shifts';
 
-DROP TABLE IF EXISTS `RecipePreparations`;
+DROP TABLE IF EXISTS 'RecipePreparations';
 
-DROP TABLE IF EXISTS `UserRoles`;
+DROP TABLE IF EXISTS 'UserRoles';
 
-DROP TABLE IF EXISTS `Services`;
+DROP TABLE IF EXISTS 'Services';
 
-DROP TABLE IF EXISTS `MenuItems`;
+DROP TABLE IF EXISTS 'MenuItems';
 
-DROP TABLE IF EXISTS `MenuFeatures`;
+DROP TABLE IF EXISTS 'MenuFeatures';
 
-DROP TABLE IF EXISTS `MenuSections`;
+DROP TABLE IF EXISTS 'MenuSections';
 
-DROP TABLE IF EXISTS `Menus`;
+DROP TABLE IF EXISTS 'Menus';
 
-DROP TABLE IF EXISTS `Events`;
+DROP TABLE IF EXISTS 'Events';
 
-DROP TABLE IF EXISTS `Preparations`;
+DROP TABLE IF EXISTS 'Preparations';
 
-DROP TABLE IF EXISTS `Recipes`;
+DROP TABLE IF EXISTS 'Recipes';
 
-DROP TABLE IF EXISTS `Roles`;
+DROP TABLE IF EXISTS 'Roles';
 
-DROP TABLE IF EXISTS `Users`;
+DROP TABLE IF EXISTS 'Users';
 
 -- 2) CREATE ALL TABLES (in dependency order)
 -- Start with tables that don't depend on others
 CREATE TABLE
-    `Users` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `username` TEXT NOT NULL DEFAULT ''
+    'Users' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'username' TEXT NOT NULL DEFAULT ''
+        'role' TEXT NOT NULL,
     );
 
 CREATE TABLE
-    `Roles` (
-        `id` INTEGER NOT NULL,
-        `role` TEXT NOT NULL,
-        PRIMARY KEY (`id`)
+    'Permanent' (
+        'id' INTEGER NOT NULL,
+        'isPermanent' INTEGER NOT NULL,
+        PRIMARY KEY ('id')
     );
 
 CREATE TABLE
-    `Recipes` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `name` TEXT,
-        `description` TEXT DEFAULT ''
+    'Recipes' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'name' TEXT,
+        'description' TEXT DEFAULT ''
     );
 
 CREATE TABLE
-    `Preparations` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `name` TEXT,
-        `description` TEXT DEFAULT ''
+    'Preparations' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'name' TEXT,
+        'description' TEXT DEFAULT ''
     );
 
 -- Tables with simple dependencies
 CREATE TABLE
-    `Events` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `name` TEXT,
-        `date_start` DATE,
-        `date_end` DATE,
-        `chef_id` INTEGER NOT NULL
+    'Events' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'name' TEXT,
+        'date_start' DATE,
+        'date_end' DATE,
+        'chef_id' INTEGER NOT NULL
     );
 
 CREATE TABLE
-    `Menus` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `title` TEXT,
-        `owner_id` INTEGER,
-        `published` INTEGER DEFAULT 0
+    'Menus' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'title' TEXT,
+        'owner_id' INTEGER,
+        'published' INTEGER DEFAULT 0
     );
 
 CREATE TABLE
-    `MenuSections` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `menu_id` INTEGER NOT NULL,
-        `name` TEXT,
-        `position` INTEGER
+    'MenuSections' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'menu_id' INTEGER NOT NULL,
+        'name' TEXT,
+        'position' INTEGER
     );
 
 CREATE TABLE
-    `UserRoles` (
-        `user_id` INTEGER NOT NULL,
-        `role_id` INT NOT NULL DEFAULT 0
+    'UserRoles' (
+        'user_id' INTEGER NOT NULL,
+        'role_id' INT NOT NULL DEFAULT 0
     );
 
 CREATE TABLE
-    `RecipePreparations` (
-        `recipe_id` INTEGER,
-        `preparation_id` INTEGER,
-        PRIMARY KEY (`recipe_id`, `preparation_id`),
-        FOREIGN KEY (`recipe_id`) REFERENCES `Recipes` (`id`),
-        FOREIGN KEY (`preparation_id`) REFERENCES `Preparations` (`id`)
+    'RecipePreparations' (
+        'recipe_id' INTEGER,
+        'preparation_id' INTEGER,
+        PRIMARY KEY ('recipe_id', 'preparation_id'),
+        FOREIGN KEY ('recipe_id') REFERENCES 'Recipes' ('id'),
+        FOREIGN KEY ('preparation_id') REFERENCES 'Preparations' ('id')
     );
 
 CREATE TABLE
-    `MenuFeatures` (
-        `menu_id` INTEGER NOT NULL,
-        `name` TEXT NOT NULL DEFAULT '',
-        `value` INTEGER DEFAULT 0
+    'MenuFeatures' (
+        'menu_id' INTEGER NOT NULL,
+        'name' TEXT NOT NULL DEFAULT '',
+        'value' INTEGER DEFAULT 0
     );
 
 CREATE TABLE
-    `MenuItems` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `menu_id` INTEGER NOT NULL,
-        `section_id` INTEGER,
-        `description` TEXT,
-        `recipe_id` INTEGER NOT NULL,
-        `position` INTEGER
+    'MenuItems' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'menu_id' INTEGER NOT NULL,
+        'section_id' INTEGER,
+        'description' TEXT,
+        'recipe_id' INTEGER NOT NULL,
+        'position' INTEGER
     );
 
 CREATE TABLE
-    `Services` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `event_id` INTEGER NOT NULL,
-        `name` TEXT,
-        `approved_menu_id` INTEGER DEFAULT 0,
-        `service_date` DATE,
-        `time_start` TIME,
-        `time_end` TIME,
-        `location` TEXT
+    'Services' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'event_id' INTEGER NOT NULL,
+        'name' TEXT,
+        'approved_menu_id' INTEGER DEFAULT 0,
+        'service_date' DATE,
+        'time_start' TIME,
+        'time_end' TIME,
+        'location' TEXT
     );
 
 CREATE TABLE
-    `Shifts` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `date` DATE NOT NULL,
-        `start_time` TIME NOT NULL,
-        `end_time` TIME NOT NULL
+    'Shifts' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'date' DATE NOT NULL,
+        'start_time' TIME NOT NULL,
+        'end_time' TIME NOT NULL
     );
 
 CREATE TABLE
-    `ShiftBookings` (
-        `shift_id` INTEGER NOT NULL,
-        `user_id` INTEGER NOT NULL,
-        PRIMARY KEY (`shift_id`, `user_id`)
+    'ShiftBookings' (
+        'shift_id' INTEGER NOT NULL,
+        'user_id' INTEGER NOT NULL,
+        PRIMARY KEY ('shift_id', 'user_id')
     );
 
 CREATE TABLE
-    `SummarySheets` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `service_id` INTEGER NOT NULL,
-        `owner_id` INTEGER NOT NULL,
-        FOREIGN KEY (`service_id`) REFERENCES `Services` (`id`),
-        FOREIGN KEY (`owner_id`) REFERENCES `Users` (`id`)
+    'SummarySheets' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'service_id' INTEGER NOT NULL,
+        'owner_id' INTEGER NOT NULL,
+        FOREIGN KEY ('service_id') REFERENCES 'Services' ('id'),
+        FOREIGN KEY ('owner_id') REFERENCES 'Users' ('id')
     );
 
 CREATE TABLE
-    `Tasks` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `sumsheet_id` INTEGER NOT NULL,
-        `kitchenproc_id` INTEGER NOT NULL,
-        `preparation_id` INTEGER DEFAULT NULL,
-        `description` TEXT,
-        `type` INTEGER NOT NULL DEFAULT 1,
-        `quantity` REAL DEFAULT NULL,
-        `position` INTEGER NOT NULL DEFAULT 0,
-        `portions` INTEGER DEFAULT NULL,
-        `ready` INTEGER DEFAULT 0,
-        FOREIGN KEY (`sumsheet_id`) REFERENCES `SummarySheets` (`id`),
-        FOREIGN KEY (`kitchenproc_id`) REFERENCES `Recipes` (`id`)
+    'Tasks' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'sumsheet_id' INTEGER NOT NULL,
+        'kitchenproc_id' INTEGER NOT NULL,
+        'preparation_id' INTEGER DEFAULT NULL,
+        'description' TEXT,
+        'type' INTEGER NOT NULL DEFAULT 1,
+        'quantity' REAL DEFAULT NULL,
+        'position' INTEGER NOT NULL DEFAULT 0,
+        'portions' INTEGER DEFAULT NULL,
+        'ready' INTEGER DEFAULT 0,
+        FOREIGN KEY ('sumsheet_id') REFERENCES 'SummarySheets' ('id'),
+        FOREIGN KEY ('kitchenproc_id') REFERENCES 'Recipes' ('id')
     );
 
 CREATE TABLE
-    `Assignment` (
-        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-        `sumsheet_id` INTEGER NOT NULL,
-        `task_id` INTEGER NOT NULL,
-        `cook_id` INTEGER NOT NULL,
-        `shift_id` INTEGER NOT NULL,
-        FOREIGN KEY (`sumsheet_id`) REFERENCES `SummarySheets` (`id`),
-        FOREIGN KEY (`task_id`) REFERENCES `Tasks` (`id`),
-        FOREIGN KEY (`cook_id`) REFERENCES `Users` (`id`),
-        FOREIGN KEY (`shift_id`) REFERENCES `Shifts` (`id`)
+    'Assignment' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'sumsheet_id' INTEGER NOT NULL,
+        'task_id' INTEGER NOT NULL,
+        'cook_id' INTEGER NOT NULL,
+        'shift_id' INTEGER NOT NULL,
+        FOREIGN KEY ('sumsheet_id') REFERENCES 'SummarySheets' ('id'),
+        FOREIGN KEY ('task_id') REFERENCES 'Tasks' ('id'),
+        FOREIGN KEY ('cook_id') REFERENCES 'Users' ('id'),
+        FOREIGN KEY ('shift_id') REFERENCES 'Shifts' ('id')
     );
 
 -- Clean up existing data

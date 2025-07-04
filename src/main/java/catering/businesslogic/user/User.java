@@ -18,7 +18,10 @@ public class User {
     private int id;
     private String username;
     private Set<Role> roles;
+    private boolean isPermanent;
 
+
+    // --- CONSTRUCTORS ---
     public User() {
         this(null);
     }
@@ -27,7 +30,86 @@ public class User {
         id = 0;
         this.username = username;
         this.roles = new HashSet<>();
+        this.isPermanent = false;
     }
+
+
+    // --- GETTER AND SETTERS ---
+
+    /**
+     * Return the id of the user
+     *
+     * @return int id - The id of the user
+     */
+    public int getId() {
+        return this.id;
+    }
+
+    /**
+     * Change the id of the user
+     *
+     * @param id - int
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * Get the username of the user
+     *
+     * @return String username - the username of the user
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Sets the username for this user
+     *
+     * @param username - String
+     */
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+    /**
+     * Gets all roles assigned to this user
+     *
+     * @return A set containing all user roles
+     */
+    public Set<Role> getRoles() {
+        return new HashSet<>(this.roles); // Return a copy to prevent external modification
+    }
+
+    /**
+     * Set the current roles for the user
+     *
+     * @param roles - Set<Role>
+     */
+    public void setRoles(Set<Role> roles){
+        this.roles = roles;
+    }
+
+    /**
+     * Return if the user is permanent
+     *
+     * @return A boolean -> True if yes, False is no
+     */
+    public boolean getPermanent() {
+        return this.isPermanent;
+    }
+
+    /**
+     * Set the value for isPermanent
+     *
+     * @param isPermanent - Boolean
+     */
+    public void setPermament(boolean isPermanent){
+        this.isPermanent = isPermanent;
+    }
+
+
+    // --- SPECIFIC GETTER FOR ROLES ---
 
     public boolean isCook() {
         return roles.contains(Role.CUOCO);
@@ -37,40 +119,16 @@ public class User {
         return roles.contains(Role.CHEF);
     }
 
-    public String getUserName() {
-        return username;
+    public boolean isOrganiser() {
+        return roles.contains(Role.ORGANIZZATORE);
     }
 
-    public int getId() {
-        return this.id;
+    public boolean isService() {
+        return roles.contains(Role.SERVIZIO);
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(id).append(" ").append(username);
-
-        if (!roles.isEmpty()) {
-            sb.append(" : ");
-            for (User.Role r : roles) {
-                sb.append(r.toString()).append(" ");
-            }
-        }
-
-        return sb.toString();
-    }
-
-    /**
-     * Sets the username for this user
-     * 
-     * @param username The new username
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    // ROLES METHOD
 
     /**
      * Adds a role to this user
@@ -102,14 +160,6 @@ public class User {
         return this.roles.contains(role);
     }
 
-    /**
-     * Gets all roles assigned to this user
-     * 
-     * @return A set containing all user roles
-     */
-    public Set<Role> getRoles() {
-        return new HashSet<>(this.roles); // Return a copy to prevent external modification
-    }
 
     // STATIC METHODS FOR PERSISTENCE
 
@@ -169,7 +219,6 @@ public class User {
         return users;
     }
 
-    // Helper method to load roles for a user
     private static void loadRolesForUser(User u) {
         String roleQuery = "SELECT * FROM UserRoles WHERE user_id = ?";
 
@@ -193,6 +242,46 @@ public class User {
                 }
             }
         }, u.id); // Pass u.id as parameter
+    }
+
+    private static ArrayList<User> loadAllPermanentUsers() {
+        String userQuery = "SELECT * FROM Users WHERE isPermanent = 1";
+        ArrayList<User> users = new ArrayList<>();
+
+        PersistenceManager.executeQuery(userQuery, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                User u = new User();
+                u.id = rs.getInt("id");
+                u.username = rs.getString("username");
+
+                // Load roles for this user
+                loadRolesForUser(u);
+                users.add(u);
+            }
+        });
+
+        return users;
+    }
+
+    private static ArrayList<User> loadAllOccasionalUsers() {
+        String userQuery = "SELECT * FROM Users WHERE isPermanent = 0";
+        ArrayList<User> users = new ArrayList<>();
+
+        PersistenceManager.executeQuery(userQuery, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                User u = new User();
+                u.id = rs.getInt("id");
+                u.username = rs.getString("username");
+
+                // Load roles for this user
+                loadRolesForUser(u);
+                users.add(u);
+            }
+        });
+
+        return users;
     }
 
     /**
@@ -323,6 +412,11 @@ public class User {
         return this.username != null && this.username.equals(other.username);
     }
 
+    private static int spread(int h) {
+        h ^= (h >>> 20) ^ (h >>> 12);
+        return h ^ (h >>> 7) ^ (h >>> 4);
+    }
+
     /**
      * Generates a hash code for this user.
      * The hash code is based on ID if it's valid (> 0), or username otherwise.
@@ -334,14 +428,28 @@ public class User {
         final int prime = 31;
         int result = 1;
 
-        // Use ID if it's valid
         if (id > 0) {
             result = prime * result + id;
         } else {
-            // Otherwise use username
             result = prime * result + (username != null ? username.hashCode() : 0);
         }
 
-        return result;
+        return spread(result);
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(id).append(" ").append(username);
+
+        if (!roles.isEmpty()) {
+            sb.append(" : ");
+            for (User.Role r : roles) {
+                sb.append(r.toString()).append(" ");
+            }
+        }
+
+        return sb.toString();
     }
 }
+
+
