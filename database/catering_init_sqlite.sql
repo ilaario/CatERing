@@ -34,20 +34,31 @@ DROP TABLE IF EXISTS 'Roles';
 
 DROP TABLE IF EXISTS 'Users';
 
+DROP TABLE IF EXISTS 'Permanent';
+
+DROP TABLE IF EXISTS 'Vacation';
+
 -- 2) CREATE ALL TABLES (in dependency order)
 -- Start with tables that don't depend on others
 CREATE TABLE
     'Users' (
         'id' INTEGER PRIMARY KEY AUTOINCREMENT,
         'username' TEXT NOT NULL DEFAULT ''
-        'role' TEXT NOT NULL,
     );
 
 CREATE TABLE
+    'Vacation' (
+        'user_id' INTEGER NOT NULL,
+        'dateStart' DATE NOT NULL,
+        'dateEnd' DATE NOT NULL,
+        FOREIGN KEY ('user_id') REFERENCES 'Users' ('id')
+);
+
+CREATE TABLE
     'Permanent' (
-        'id' INTEGER NOT NULL,
+        'user_id' INTEGER NOT NULL,
         'isPermanent' INTEGER NOT NULL,
-        PRIMARY KEY ('id')
+        FOREIGN KEY ('user_id') REFERENCES 'Users' ('id')
     );
 
 CREATE TABLE
@@ -71,7 +82,8 @@ CREATE TABLE
         'name' TEXT,
         'date_start' DATE,
         'date_end' DATE,
-        'chef_id' INTEGER NOT NULL
+        'chef_id' INTEGER NOT NULL,
+        FOREIGN KEY ('chef_id') REFERENCES 'Users' ('id')
     );
 
 CREATE TABLE
@@ -79,7 +91,8 @@ CREATE TABLE
         'id' INTEGER PRIMARY KEY AUTOINCREMENT,
         'title' TEXT,
         'owner_id' INTEGER,
-        'published' INTEGER DEFAULT 0
+        'published' INTEGER DEFAULT 0,
+        FOREIGN KEY ('owner_id') REFERENCES 'Users' ('id')
     );
 
 CREATE TABLE
@@ -87,13 +100,15 @@ CREATE TABLE
         'id' INTEGER PRIMARY KEY AUTOINCREMENT,
         'menu_id' INTEGER NOT NULL,
         'name' TEXT,
-        'position' INTEGER
+        'position' INTEGER,
+        FOREIGN KEY ('menu_id') REFERENCES 'Menus' ('id')
     );
 
 CREATE TABLE
     'UserRoles' (
         'user_id' INTEGER NOT NULL,
-        'role_id' INT NOT NULL DEFAULT 0
+        'role_id' INT NOT NULL DEFAULT 0,
+        FOREIGN KEY ('user_id') REFERENCES 'Users' ('id')
     );
 
 CREATE TABLE
@@ -109,7 +124,8 @@ CREATE TABLE
     'MenuFeatures' (
         'menu_id' INTEGER NOT NULL,
         'name' TEXT NOT NULL DEFAULT '',
-        'value' INTEGER DEFAULT 0
+        'value' INTEGER DEFAULT 0,
+        FOREIGN KEY ('menu_id') REFERENCES 'Menus' ('id')
     );
 
 CREATE TABLE
@@ -119,7 +135,8 @@ CREATE TABLE
         'section_id' INTEGER,
         'description' TEXT,
         'recipe_id' INTEGER NOT NULL,
-        'position' INTEGER
+        'position' INTEGER,
+        FOREIGN KEY ('menu_id') REFERENCES 'Menus' ('id')
     );
 
 CREATE TABLE
@@ -146,8 +163,11 @@ CREATE TABLE
     'ShiftBookings' (
         'shift_id' INTEGER NOT NULL,
         'user_id' INTEGER NOT NULL,
-        PRIMARY KEY ('shift_id', 'user_id')
-    );
+        PRIMARY KEY ('shift_id', 'user_id'),
+        FOREIGN KEY ('shift_id') REFERENCES 'Shifts' ('id'),
+        FOREIGN KEY ('user_id') REFERENCES 'Users' ('id')
+
+);
 
 CREATE TABLE
     'SummarySheets' (
@@ -940,13 +960,6 @@ INSERT INTO Users (username) VALUES
 ('Chiara'),   -- ID 6
 ('Giovanni'),   -- ID 7
 ('Francesca'); -- ID 8
-
--- Next, set up the role entries in Roles table (if not already present)
-INSERT OR IGNORE INTO Roles (id, role) VALUES
-(0,'CUOCO'),
-(1, 'CHEF'),
-(2, 'ORGANIZZATORE'),
-(3, 'SERVIZIO');
 
 -- Now assign roles to users
 -- Staff (SERVIZIO)
