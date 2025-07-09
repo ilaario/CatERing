@@ -87,10 +87,10 @@ public class ShiftManager {
      */
     public void bookUserForShift(Shift shift, User user) {
         if (isAvailable(user, shift)) {
-            LOGGER.info("Booking user " + user.getUserName() + " for shift ID: " + shift.getId());
+            LOGGER.info("Booking user " + user.getUsername() + " for shift ID: " + shift.getId());
             shift.addBooking(user);
         } else {
-            LOGGER.warning("User " + user.getUserName() + " is already booked for shift ID: " + shift.getId());
+            LOGGER.warning("User " + user.getUsername() + " is already booked for shift ID: " + shift.getId());
         }
     }
 
@@ -102,7 +102,7 @@ public class ShiftManager {
      * @return The removed user or null if not booked
      */
     public User removeUserFromShift(Shift shift, User user) {
-        LOGGER.info("Removing user " + user.getUserName() + " from shift ID: " + shift.getId());
+        LOGGER.info("Removing user " + user.getUsername() + " from shift ID: " + shift.getId());
         return shift.removeBookedUser(user);
     }
 

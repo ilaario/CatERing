@@ -236,7 +236,7 @@ public class SummarySheet {
     public String toString() {
         StringBuilder sb = new StringBuilder("\n\nSummarySheet [ID: ")
                 .append(id)
-                .append(", Owner: ").append(owner != null ? owner.getUserName() : "none");
+                .append(", Owner: ").append(owner != null ? owner.getUsername() : "none");
 
         // Service info
         if (service != null) {

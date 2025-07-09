@@ -566,7 +566,7 @@ public class Menu {
         StringBuilder result = new StringBuilder();
         result.append(this.title)
                 .append(" (autore: ")
-                .append(this.owner != null ? this.owner.getUserName() : "unknown")
+                .append(this.owner != null ? this.owner.getUsername() : "unknown")
                 .append("), ")
                 .append(published ? "pubblicato" : "non pubblicato")
                 .append(", ")

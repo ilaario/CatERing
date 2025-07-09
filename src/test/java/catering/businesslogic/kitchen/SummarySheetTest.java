@@ -60,7 +60,7 @@ public class SummarySheetTest {
             assertNotNull(testService, "Test service should be loaded");
 
             // Login as chef
-            app.getUserManager().fakeLogin(chef.getUserName());
+            app.getUserManager().fakeLogin(chef.getUsername());
 
             assertEquals(chef, app.getUserManager().getCurrentUser(), "Current user should be the chef");
 
@@ -128,7 +128,7 @@ public class SummarySheetTest {
 
             LOGGER.info("Successfully assigned task. Assignment details: " +
                     "Task: " + assignment.getTask().getDescription() +
-                    ", Cook: " + assignment.getCook().getUserName() +
+                    ", Cook: " + assignment.getCook().getUsername() +
                     ", Shift: " + assignment.getShift().getDate() + " " +
                     assignment.getShift().getStartTime() + "-" +
                     assignment.getShift().getEndTime());

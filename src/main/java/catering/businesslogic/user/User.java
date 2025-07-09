@@ -1,13 +1,16 @@
 package catering.businesslogic.user;
 
+import catering.businesslogic.shift.Shift;
 import catering.persistence.PersistenceManager;
 import catering.persistence.ResultHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class User {
 
@@ -19,6 +22,7 @@ public class User {
     private String username;
     private Set<Role> roles;
     private boolean isPermanent;
+    private int vacationDaysLeft;
 
 
     // --- CONSTRUCTORS ---
@@ -31,6 +35,7 @@ public class User {
         this.username = username;
         this.roles = new HashSet<>();
         this.isPermanent = false;
+        this.vacationDaysLeft = 30;
     }
 
 
@@ -108,6 +113,21 @@ public class User {
         this.isPermanent = isPermanent;
     }
 
+    /**
+     * Get the value for vacationDaysLeft
+     *
+     * @return vacationDaysLeft - int
+     */
+    public int getVacationDaysLeft() {return this.vacationDaysLeft;}
+
+    /**
+     * Set the value for vacationDaysLeft
+     *
+     * @param vacationDaysLeft - int
+     */
+    public void setVacationDaysLeft(int vacationDaysLeft) {
+        this.vacationDaysLeft = vacationDaysLeft;
+    }
 
     // --- SPECIFIC GETTER FOR ROLES ---
 
@@ -160,6 +180,49 @@ public class User {
         return this.roles.contains(role);
     }
 
+    /**
+     * Post a vacation request, if the conditions are valid
+     *
+     * @param dateStart - Date
+     * @param dateEnd - Date
+     * @return True if vacation request posted (pending for approval), False if conditions not valid
+     */
+    public boolean requestVacation(Date dateStart, Date dateEnd) {
+        if (this.vacationDaysLeft <= 0 || this.vacationDaysLeft <= dateEnd.getTime() - dateStart.getTime()) {
+            return false;
+        }
+
+        ArrayList<Shift> shifts = new ArrayList<>();
+
+        String userQuery =
+                "SELECT *" +
+                "FROM Shifts s JOIN ShiftBookings b ON s.id =  b.shift_id " +
+                "WHERE b.user_id = ?";
+
+        PersistenceManager.executeQuery(userQuery, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                while (rs.next()) {
+                    // 3) Crea un nuovo oggetto Shift per ogni riga
+                    Shift shift = new Shift(rs.getDate("date"), rs.getTime("start_time"), rs.getTime("end_time"));
+                    shifts.add(shift);
+                }
+            }
+        }, this.id); // Pass uid as parameter
+
+        for (Shift shift : shifts) {
+            if(shift.getDate().getTime() >= dateStart.getTime() && shift.getDate().getTime() <= dateEnd.getTime()) {
+                return false;
+            }
+        }
+
+        String query = "INSERT INTO Vacation (id, dateStart, dateEnd) VALUES(?,?,?,?)";
+
+        PersistenceManager.executeUpdate(query, this.id, dateStart.getTime(), dateEnd.getTime(), false);
+
+        return true;
+    }
+
 
     // STATIC METHODS FOR PERSISTENCE
 
@@ -182,21 +245,21 @@ public class User {
     }
 
     public static User load(String username) {
-        User u = new User();
+        User load = new User();
         String userQuery = "SELECT * FROM Users WHERE username = ?";
 
         PersistenceManager.executeQuery(userQuery, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                u.id = rs.getInt("id");
-                u.username = rs.getString("username");
+                load.id = rs.getInt("id");
+                load.username = rs.getString("username");
             }
         }, username); // Pass username as parameter
 
-        if (u.id > 0) {
-            loadRolesForUser(u);
+        if (load.id > 0) {
+            loadRolesForUser(load);
         }
-        return u;
+        return load;
     }
 
     public static ArrayList<User> loadAllUsers() {

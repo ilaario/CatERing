@@ -61,7 +61,7 @@ public class KitchenTaskManager {
         if (!user.isChef())
             throw new UseCaseLogicException();
         if (!ss.isOwner(user))
-            throw new SummarySheetException("User: " + user.getUserName() + " is not owner of the SummarySheet");
+            throw new SummarySheetException("User: " + user.getUsername() + " is not owner of the SummarySheet");
         setCurrentSumSheet(ss);
         return ss;
     }
@@ -108,7 +108,7 @@ public class KitchenTaskManager {
             throw new UseCaseLogicException("Cannot assign task because there is no active summary sheet.");
         }
         if (cook != null && !CatERing.getInstance().getShiftManager().isAvailable(cook, s)) {
-            throw new UseCaseLogicException("Cook " + cook.getUserName() + " is not available for the selected shift.");
+            throw new UseCaseLogicException("Cook " + cook.getUsername() + " is not available for the selected shift.");
         }
         Assignment a = currentSumSheet.addAssignment(t, s, cook);
         this.notifyAssignmentAdded(a);

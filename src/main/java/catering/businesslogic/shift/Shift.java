@@ -51,6 +51,10 @@ public class Shift {
         this.endTime = endTime;
     }
 
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
+
     // STATIC METHODS FOR PERSISTENCE
 
     public static ArrayList<Shift> getShiftTable() {
@@ -262,7 +266,7 @@ public class Shift {
 
     public void addBooking(User u) {
         if (this.bookedUsers.containsKey(u.getId())) {
-            LOGGER.warning("User " + u.getUserName() + " is already booked for this shift");
+            LOGGER.warning("User " + u.getUsername() + " is already booked for this shift");
             return;
         }
 
@@ -270,12 +274,12 @@ public class Shift {
         PersistenceManager.executeUpdate(query, this.id, u.getId());
 
         this.bookedUsers.put(u.getId(), u);
-        LOGGER.info("Added booking for user " + u.getUserName() + " to shift ID " + this.id);
+        LOGGER.info("Added booking for user " + u.getUsername() + " to shift ID " + this.id);
     }
 
     public User removeBookedUser(User u) {
         if (!this.bookedUsers.containsKey(u.getId())) {
-            LOGGER.warning("User " + u.getUserName() + " is not booked for this shift");
+            LOGGER.warning("User " + u.getUsername() + " is not booked for this shift");
             return null;
         }
 
@@ -284,10 +288,10 @@ public class Shift {
 
         if (rowsAffected > 0) {
             User removed = this.bookedUsers.remove(u.getId());
-            LOGGER.info("Removed booking for user " + u.getUserName() + " from shift ID " + this.id);
+            LOGGER.info("Removed booking for user " + u.getUsername() + " from shift ID " + this.id);
             return removed;
         } else {
-            LOGGER.warning("Failed to remove booking for user " + u.getUserName() + " from shift ID " + this.id);
+            LOGGER.warning("Failed to remove booking for user " + u.getUsername() + " from shift ID " + this.id);
             return null;
         }
     }

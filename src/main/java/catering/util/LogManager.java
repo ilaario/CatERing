@@ -1,5 +1,7 @@
 package catering.util;
 
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.ConsoleHandler;
@@ -10,27 +12,24 @@ import java.util.logging.Logger;
 
 /**
  * Utility class to provide consistent logging across the application
+ * with C-like formatting: chunked lines, prefix/dashes, and PID.
  */
 public class LogManager {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final int MAX_CONTENT_WIDTH = 80;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy - HH:mm.SSS");
     private static LogManager instance = null;
 
     private LogManager() {
-        // Private constructor
         Logger rootLogger = Logger.getLogger("");
-
         // Remove existing handlers
         for (java.util.logging.Handler handler : rootLogger.getHandlers()) {
             rootLogger.removeHandler(handler);
         }
-
-        // Add a console handler with custom formatter
+        // Add console handler with custom C-like formatter
         ConsoleHandler consoleHandler = new ConsoleHandler();
         consoleHandler.setLevel(Level.ALL);
-        consoleHandler.setFormatter(new CustomFormatter());
+        consoleHandler.setFormatter(new CFormatter());
         rootLogger.addHandler(consoleHandler);
-
-        // Set default level
         rootLogger.setLevel(Level.INFO);
     }
 
@@ -42,28 +41,56 @@ public class LogManager {
     }
 
     public static Logger getLogger(Class<?> clazz) {
-        getInstance(); // Ensure logger is configured
+        getInstance(); // Ensure configured
         return Logger.getLogger(clazz.getName());
     }
 
     /**
-     * Custom formatter for readable log output
+     * Custom formatter implementing C-style chunking, prefix and dashes.
      */
-    private static class CustomFormatter extends Formatter {
+    private static class CFormatter extends Formatter {
         @Override
         public String format(LogRecord record) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(DATE_FORMAT.format(new Date(record.getMillis())));
-            sb.append(" [").append(record.getLevel()).append("] ");
-            sb.append(record.getLoggerName()).append(": ");
-            sb.append(formatMessage(record));
+            String message = formatMessage(record);
+            String timestamp = DATE_FORMAT.format(new Date(record.getMillis()));
+            long pid = getProcessId();
+            String level = mapLevel(record.getLevel());
+            String prefix = String.format("[%s] - [PID:%d] - [%s] --> ", level, pid, timestamp);
+            StringBuilder output = new StringBuilder();
+            // Prepare dash line
+            String dashes = new String(new char[prefix.length()]).replace('\0', '-');
 
-            if (record.getThrown() != null) {
-                sb.append("\n").append(formatException(record.getThrown()));
+            int idx = 0;
+            int chunkNo = 0;
+            int len = message.length();
+            while (idx < len) {
+                int scanLen = Math.min(MAX_CONTENT_WIDTH, len - idx);
+                int newlinePos = message.indexOf('\n', idx);
+                int chunkLen;
+                boolean hasNewline = false;
+                if (newlinePos >= 0 && newlinePos - idx < scanLen) {
+                    chunkLen = newlinePos - idx;
+                    hasNewline = true;
+                } else {
+                    chunkLen = scanLen;
+                }
+                String chunk = message.substring(idx, idx + chunkLen);
+                if (chunkNo == 0) {
+                    output.append(prefix).append("[").append(chunk).append("]\n");
+                } else {
+                    output.append(dashes).append("] --> [").append(chunk).append("]");
+                    output.append("\n");
+                }
+                idx += chunkLen;
+                if (hasNewline) {
+                    idx++;
+                }
+                chunkNo++;
             }
-
-            sb.append("\n");
-            return sb.toString();
+            if (record.getThrown() != null) {
+                output.append(formatException(record.getThrown()));
+            }
+            return output.toString();
         }
 
         private String formatException(Throwable throwable) {
@@ -73,6 +100,24 @@ public class LogManager {
                 sb.append("\tat ").append(element.toString()).append("\n");
             }
             return sb.toString();
+        }
+
+        private String mapLevel(Level lvl) {
+            if (lvl == Level.FINEST || lvl == Level.FINER) return "TRACE";
+            if (lvl == Level.FINE) return "DEBUG";
+            if (lvl == Level.SEVERE) return "SYSER";
+            if (lvl == Level.WARNING) return "APPER";
+            if (lvl == Level.INFO) return "SYSIN"; // or APPIN based on context
+            return lvl.getName();
+        }
+
+        private long getProcessId() {
+            String jvmName = ManagementFactory.getRuntimeMXBean().getName();
+            try {
+                return Long.parseLong(jvmName.split("@")[0]);
+            } catch (Exception e) {
+                return -1;
+            }
         }
     }
 }

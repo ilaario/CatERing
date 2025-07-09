@@ -51,6 +51,7 @@ CREATE TABLE
         'user_id' INTEGER NOT NULL,
         'dateStart' DATE NOT NULL,
         'dateEnd' DATE NOT NULL,
+        'approved' BOOLEAN NOT NULL,
         FOREIGN KEY ('user_id') REFERENCES 'Users' ('id')
 );
 

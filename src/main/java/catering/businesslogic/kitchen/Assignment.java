@@ -183,7 +183,7 @@ public class Assignment {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Task: ").append(getTask() != null ? getTask().getDescription() : "none");
-        sb.append(", Cook: ").append(getCook() != null ? getCook().getUserName() : "unassigned");
+        sb.append(", Cook: ").append(getCook() != null ? getCook().getUsername() : "unassigned");
 
         Shift shift = getShift();
         if (shift != null) {

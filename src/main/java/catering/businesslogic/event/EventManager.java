@@ -125,7 +125,7 @@ public class EventManager {
      */
     public Event createEvent(String name, Date dateStart, Date dateEnd, User chef) {
         try {
-            LOGGER.info("Creating new event '" + name + "' with chef " + chef.getUserName());
+            LOGGER.info("Creating new event '" + name + "' with chef " + chef.getUsername());
 
             Event event = new Event();
             event.setName(name);

@@ -12,10 +12,6 @@ public class UserManager {
     public void fakeLogin(String username) throws UseCaseLogicException {
         LOGGER.info("Attempting login for user: " + username);
         this.currentUser = User.load(username);
-        if (this.currentUser == null) {
-            LOGGER.warning("Login failed: user not found - " + username);
-            throw new UseCaseLogicException("User not found");
-        }
         LOGGER.info("User successfully logged in: " + username);
     }
 
