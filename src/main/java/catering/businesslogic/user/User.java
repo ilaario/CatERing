@@ -1,6 +1,8 @@
 package catering.businesslogic.user;
 
 import catering.businesslogic.shift.Shift;
+import catering.businesslogic.vacation.Vacation;
+
 import catering.persistence.PersistenceManager;
 import catering.persistence.ResultHandler;
 
@@ -10,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class User {
 
@@ -221,6 +222,34 @@ public class User {
         PersistenceManager.executeUpdate(query, this.id, dateStart.getTime(), dateEnd.getTime(), false);
 
         return true;
+    }
+
+    public ArrayList<Vacation> approveVacation() {
+        if (!this.roles.contains(Role.ORGANIZZATORE)) {
+            // TODO: exit the method notifying the user he should not be here
+            return null;
+        }
+
+        ArrayList<Vacation> vacationList = new ArrayList<>();
+
+        String vacationRequests = "SELECT * FROM Vacation WHERE approved = ?";
+        PersistenceManager.executeQuery(vacationRequests, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                while (rs.next()) {
+                    Vacation tmp = new Vacation(
+                        rs.getInt("id"), 
+                        rs.getDate("dateStart"), 
+                        rs.getDate("dateEnd"), 
+                        rs.getBoolean("approved")
+                    );
+
+                    vacationList.add(tmp);
+                }
+            }
+        }, false);
+
+        return vacationList;
     }
 
 

@@ -58,7 +58,7 @@ public class LogManager {
             String prefix = String.format("[%s] - [PID:%d] - [%s] --> ", level, pid, timestamp);
             StringBuilder output = new StringBuilder();
             // Prepare dash line
-            String dashes = new String(new char[prefix.length()]).replace('\0', '-');
+            String dashes = new String(new char[prefix.length() - 6]).replace('\0', '-');
 
             int idx = 0;
             int chunkNo = 0;
