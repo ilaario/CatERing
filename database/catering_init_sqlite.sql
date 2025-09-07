@@ -38,12 +38,21 @@ DROP TABLE IF EXISTS 'Permanent';
 
 DROP TABLE IF EXISTS 'Vacation';
 
+DROP TABLE IF EXISTS 'UserEvaluation';
+
 -- 2) CREATE ALL TABLES (in dependency order)
 -- Start with tables that don't depend on others
 CREATE TABLE
     'Users' (
         'id' INTEGER PRIMARY KEY AUTOINCREMENT,
         'username' TEXT NOT NULL DEFAULT ''
+    );
+
+CREATE TABLE
+    'UserEvaluation' (
+         'user_id' INTEGER NOT NULL,
+         'evaluation' INT NOT NULL DEFAULT 0,
+         FOREIGN KEY ('user_id') REFERENCES 'Users' ('id')
     );
 
 CREATE TABLE

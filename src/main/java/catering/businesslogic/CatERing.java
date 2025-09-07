@@ -6,6 +6,7 @@ import catering.businesslogic.menu.MenuManager;
 import catering.businesslogic.recipe.RecipeManager;
 import catering.businesslogic.shift.ShiftManager;
 import catering.businesslogic.user.UserManager;
+import catering.businesslogic.vacation.VacationManager;
 import catering.persistence.KitchenTaskPersistence;
 import catering.persistence.MenuPersistence;
 
@@ -25,6 +26,7 @@ public class CatERing {
     private EventManager eventMgr;
     private KitchenTaskManager kitchenTaskMgr;
     private ShiftManager shiftMgr;
+    private VacationManager vacationMgr;
 
     private MenuPersistence menuPersistence;
     private KitchenTaskPersistence kitchenTaskPersistence;
@@ -36,6 +38,7 @@ public class CatERing {
         eventMgr = new EventManager();
         kitchenTaskMgr = new KitchenTaskManager();
         shiftMgr = new ShiftManager(); // Add this line to initialize ShiftManager
+        vacationMgr = new VacationManager();
 
         menuPersistence = new MenuPersistence();
         kitchenTaskPersistence = new KitchenTaskPersistence();
@@ -58,6 +61,7 @@ public class CatERing {
         System.out.println("- Event Manager: " + (app.getEventManager() != null ? "OK" : "NOT AVAILABLE"));
         System.out.println("- Kitchen Task Manager: " + (app.getKitchenTaskManager() != null ? "OK" : "NOT AVAILABLE"));
         System.out.println("- Shift Manager: " + (app.getShiftManager() != null ? "OK" : "NOT AVAILABLE"));
+        System.out.println("- Vacation Manager: " + (app.getVacationManager() != null ? "OK" : "NOT AVAILABLE"));
     }
 
     public KitchenTaskManager getKitchenTaskManager() {
@@ -66,6 +70,14 @@ public class CatERing {
 
     public ShiftManager getShiftManager() {
         return shiftMgr;
+    }
+
+    public VacationManager getVacationManager() {
+        return vacationMgr;
+    }
+
+    public void setVacationManager(VacationManager vacationMgr){
+        this.vacationMgr = vacationMgr;
     }
 
     public void setShiftManager(ShiftManager shiftMgr) {

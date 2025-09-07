@@ -1,6 +1,5 @@
 package catering.util;
 
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;

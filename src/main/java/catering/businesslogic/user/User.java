@@ -9,9 +9,10 @@ import catering.persistence.ResultHandler;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.time.Duration;
 
 public class User {
 
@@ -23,7 +24,7 @@ public class User {
     private String username;
     private Set<Role> roles;
     private boolean isPermanent;
-    private int vacationDaysLeft;
+    private Date vacationDaysLeft;
 
 
     // --- CONSTRUCTORS ---
@@ -36,7 +37,7 @@ public class User {
         this.username = username;
         this.roles = new HashSet<>();
         this.isPermanent = false;
-        this.vacationDaysLeft = 30;
+        this.vacationDaysLeft = new Date(Duration.ofDays(30).toMillis());
     }
 
 
@@ -117,9 +118,9 @@ public class User {
     /**
      * Get the value for vacationDaysLeft
      *
-     * @return vacationDaysLeft - int
+     * @return vacationDaysLeft - Date
      */
-    public int getVacationDaysLeft() {return this.vacationDaysLeft;}
+    public Date getVacationDaysLeft() {return this.vacationDaysLeft;}
 
     /**
      * Set the value for vacationDaysLeft
@@ -127,7 +128,7 @@ public class User {
      * @param vacationDaysLeft - int
      */
     public void setVacationDaysLeft(int vacationDaysLeft) {
-        this.vacationDaysLeft = vacationDaysLeft;
+        this.vacationDaysLeft = new Date(Duration.ofDays(vacationDaysLeft).toMillis());
     }
 
     // --- SPECIFIC GETTER FOR ROLES ---
@@ -180,78 +181,6 @@ public class User {
     public boolean hasRole(Role role) {
         return this.roles.contains(role);
     }
-
-    /**
-     * Post a vacation request, if the conditions are valid
-     *
-     * @param dateStart - Date
-     * @param dateEnd - Date
-     * @return True if vacation request posted (pending for approval), False if conditions not valid
-     */
-    public boolean requestVacation(Date dateStart, Date dateEnd) {
-        if (this.vacationDaysLeft <= 0 || this.vacationDaysLeft <= dateEnd.getTime() - dateStart.getTime()) {
-            return false;
-        }
-
-        ArrayList<Shift> shifts = new ArrayList<>();
-
-        String userQuery =
-                "SELECT *" +
-                "FROM Shifts s JOIN ShiftBookings b ON s.id =  b.shift_id " +
-                "WHERE b.user_id = ?";
-
-        PersistenceManager.executeQuery(userQuery, new ResultHandler() {
-            @Override
-            public void handle(ResultSet rs) throws SQLException {
-                while (rs.next()) {
-                    // 3) Crea un nuovo oggetto Shift per ogni riga
-                    Shift shift = new Shift(rs.getDate("date"), rs.getTime("start_time"), rs.getTime("end_time"));
-                    shifts.add(shift);
-                }
-            }
-        }, this.id); // Pass uid as parameter
-
-        for (Shift shift : shifts) {
-            if(shift.getDate().getTime() >= dateStart.getTime() && shift.getDate().getTime() <= dateEnd.getTime()) {
-                return false;
-            }
-        }
-
-        String query = "INSERT INTO Vacation (id, dateStart, dateEnd) VALUES(?,?,?,?)";
-
-        PersistenceManager.executeUpdate(query, this.id, dateStart.getTime(), dateEnd.getTime(), false);
-
-        return true;
-    }
-
-    public ArrayList<Vacation> approveVacation() {
-        if (!this.roles.contains(Role.ORGANIZZATORE)) {
-            // TODO: exit the method notifying the user he should not be here
-            return null;
-        }
-
-        ArrayList<Vacation> vacationList = new ArrayList<>();
-
-        String vacationRequests = "SELECT * FROM Vacation WHERE approved = ?";
-        PersistenceManager.executeQuery(vacationRequests, new ResultHandler() {
-            @Override
-            public void handle(ResultSet rs) throws SQLException {
-                while (rs.next()) {
-                    Vacation tmp = new Vacation(
-                        rs.getInt("id"), 
-                        rs.getDate("dateStart"), 
-                        rs.getDate("dateEnd"), 
-                        rs.getBoolean("approved")
-                    );
-
-                    vacationList.add(tmp);
-                }
-            }
-        }, false);
-
-        return vacationList;
-    }
-
 
     // STATIC METHODS FOR PERSISTENCE
 
